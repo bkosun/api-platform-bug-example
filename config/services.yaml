@@ -29,3 +29,22 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    _instanceof:
+        # all services implementing the CommandHandlerInterface
+        # will be registered on the command.bus bus
+        App\MessageHandler\CommandHandlerInterface:
+            tags:
+                - { name: messenger.message_handler, bus: command.bus }
+
+        # while those implementing EventHandlerInterface will be
+        # registered on the event.bus bus
+        App\MessageHandler\EventHandlerInterface:
+            tags:
+                - { name: messenger.message_handler, bus: event.bus }
+
+        # while those implementing QueryHandlerInterface will be
+        # registered on the query.bus bus
+        App\MessageHandler\QueryHandlerInterface:
+            tags:
+                - { name: messenger.message_handler, bus: query.bus }
