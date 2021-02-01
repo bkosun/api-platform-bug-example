@@ -7,7 +7,9 @@ use App\Repository\FooRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     mercure=true
+ * )
  * @ORM\Entity(repositoryClass=FooRepository::class)
  */
 class Foo
