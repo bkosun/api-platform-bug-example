@@ -53,6 +53,13 @@ RUN set -eux; \
 	\
 	apk del .build-deps
 
+###> doctrine/doctrine-bundle ###
+RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
+	docker-php-ext-install -j$(nproc) pdo_pgsql; \
+	apk add --no-cache --virtual .pgsql-rundeps so:libpq.so.5; \
+	apk del .pgsql-deps
+###< doctrine/doctrine-bundle ###
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
@@ -83,12 +90,6 @@ RUN composer create-project "symfony/skeleton ${SYMFONY_VERSION}" . --stability=
 	composer clear-cache
 
 ###> recipes ###
-###> doctrine/doctrine-bundle ###
-RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
-	docker-php-ext-install -j$(nproc) pdo_pgsql; \
-	apk add --no-cache --virtual .pgsql-rundeps so:libpq.so.5; \
-	apk del .pgsql-deps
-###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
 COPY . .
